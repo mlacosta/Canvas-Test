@@ -13,3 +13,7 @@ body{
     margin: 100px 60px;
 }
 
+img{
+    width: 50px;
+    display: none;
+}
