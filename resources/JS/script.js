@@ -77,6 +77,7 @@ class Ball {
         this.size = 16;
         this.gameWidth = game.gameWidth;
         this.gameHeight = game.gameHeight;
+        this.game = game;
     }
 
     draw(context) {
@@ -89,17 +90,34 @@ class Ball {
     }
 
     update(dt) {
+        
         this.position.x += this.speed.x;
         this.position.y += this.speed.y;
 
         //collisions
+        //wall on left or right
 
         if(this.position.x + this.size > this.gameWidth || this.position.x <0){
             this.speed.x = -this.speed.x;
         }
-        
+        //wall on top or bottom
         if(this.position.y + this.size> this.gameHeight || this.position.y <0){
             this.speed.y = -this.speed.y;
+        }
+
+        //check collision with the paddle
+
+        let bottomBall = this.position.y + this.size;
+        let topOfPaddle = this.game.paddle.position.y;
+        let leftSideOfPaddle = this.game.paddle.position.x;
+        let rightSideOfPaddle = this.game.paddle.position.x + this.game.paddle.width;
+
+        if (bottomBall>= topOfPaddle
+            && this.position.x >= leftSideOfPaddle
+            && this.position.x + this.size <= rightSideOfPaddle
+            ){
+            this.speed.y = - this.speed.y;
+            this.position.y = this.game.paddle.position.y - this.size;
         }
 
     }
@@ -115,16 +133,18 @@ class Game{
         this.paddle = new Paddle(this); 
         this.ball = new Ball(this); 
         new InputHandler(this.paddle);
+
+        this.gameObjects = [
+            this.ball, this.paddle
+        ];
     }
 
     update(dt){
-        this.paddle.update(dt);
-        this.ball.update(dt)
+        this.gameObjects.forEach((object)=>{object.update(dt)});
     }
 
     draw(context){
-        this.paddle.draw(context);
-        this.ball.draw(context);
+        this.gameObjects.forEach((object)=>{object.draw(context)});
     }
 
 }
