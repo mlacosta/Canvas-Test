@@ -1,3 +1,9 @@
+const level1 = [
+
+    
+
+];
+
 class Paddle {
     constructor(game){
         this.gameWidth = game.gameWidth;
@@ -123,6 +129,28 @@ class Ball {
     }
 }
 
+class Brick{
+    constructor(game,position){
+        this.image = document.getElementById('img-brick');
+        this.position = position;
+        this.widht = 52;
+        this.height = 24;
+        this.game = game;
+    }
+    update(){
+
+    }
+    draw(context){
+        context.drawImage(
+            this.image,
+            this.position.x,
+            this.position.y,
+            this.widht,
+            this.height
+        )
+    }
+}
+
 class Game{
     constructor(gameHeight,gameWidth){
         this.gameHeight = gameHeight;
@@ -134,8 +162,15 @@ class Game{
         this.ball = new Ball(this); 
         new InputHandler(this.paddle);
 
+        let bricks = []
+
+        for (let i=0; i<10; i++){
+            bricks.push( new Brick(this,{x:i*52,y:30}))
+        }
+        
+
         this.gameObjects = [
-            this.ball, this.paddle
+            this.ball, this.paddle,...bricks
         ];
     }
 
